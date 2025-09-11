@@ -39,6 +39,14 @@ public class Evento {
                 .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
+    public boolean consultarAsistencia(Estudiante estudiante) {
+        return asistencia.getOrDefault(estudiante.getCif(), false);
+    }
+
+
+
+
+
     // Getters
     public String getIdEvento() { return idEvento; }
     public String getNombreEvento() { return nombreEvento; }
