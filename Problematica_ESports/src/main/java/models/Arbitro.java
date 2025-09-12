@@ -9,9 +9,18 @@ package models;
 
 public class Arbitro {
 
-    String nombre;
-    String apellido;
+    private String nombre;
+    private String apellido;
     private Partida[] partidas;
 
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellido(){
+        return apellido;
+    }
+
+    pub
 }
