@@ -40,6 +40,10 @@ public class Arbitro {
         return Collections.unmodifiableList(partidasArbitradas);
     }
 
+    public void asignarPartida(Partida partida) {
+        partidasArbitradas.add(partida);
+    }
+
 
 
     public String getNombre() {
