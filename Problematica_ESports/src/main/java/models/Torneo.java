@@ -204,8 +204,7 @@ public class Torneo {
 
     // ------------------------
     // Utilidades privadas
-    // ------------------------
-
+    // ------------------------/
     /**
      * Valida que un texto no sea nulo ni en blanco.
      */
