@@ -181,15 +181,17 @@ public class Torneo {
      * @throws IllegalStateException    si algún equipo no está inscrito
      */
     public Partida programarPartida(LocalDate fecha, Equipo e1, Equipo e2, Arbitro arbitro) {
-        Objects.requireNonNull(fecha, "fecha");
-        Objects.requireNonNull(e1, "equipo1");
-        Objects.requireNonNull(e2, "equipo2");
-        Objects.requireNonNull(juego, "juego");
-        if (e1.equals(e2)) {
-            throw new IllegalArgumentException("Una partida requiere dos equipos distintos");
-        }
-        return new Partida(fecha, e1, e2, juego, arbitro);
+        Objects.requireNonNull(arbitro, "arbitro"); // 1:1 obligatorio
+        if (e1.equals(e2)) throw new IllegalArgumentException("Una partida requiere equipos distintos");
+        if (!estaInscrito(e1) || !estaInscrito(e2))
+            throw new IllegalStateException("Ambos equipos deben estar inscritos en el torneo");
+
+        Partida p = Partida.of(this, fecha, e1, e2, arbitro);
+        partidas.add(p);
+        return p;
     }
+
+
 
     /**
      * Cancela una partida previamente programada.

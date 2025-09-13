@@ -31,18 +31,22 @@ public class Arbitro {
     public Arbitro(String nombre, String apellido) {
         //Verificaar que no sea null
         if (nombre == null || apellido == null) {throw  new IllegalArgumentException("Los nombres y apellidos no pueden ser nulos");}
-        this.nombre = nombre;
-        this.apellido = apellido;
+        this.nombre = nombre.trim();
+        this.apellido = apellido.trim();
     }
 
     /** @return vista inmutable del historial de partidas supervisadas. */
-    public List<Partida> getPartidasSupervisadas() {
+    public List<Partida> getPartidasArbitradas() {
         return Collections.unmodifiableList(partidasArbitradas);
     }
 
     public void asignarPartida(Partida partida) {
-        partidasArbitradas.add(partida);
+        if (partida != null) partidasArbitradas.add(partida);
     }
+    public List<Partida> getPartidasSupervisadas() {
+        return Collections.unmodifiableList(partidasArbitradas);
+    }
+
 
 
 
@@ -53,6 +57,9 @@ public class Arbitro {
     public String getApellido(){
         return apellido;
     }
+
+    @Override
+    public String toString() { return nombre + " " + apellido; }
 
 
 }

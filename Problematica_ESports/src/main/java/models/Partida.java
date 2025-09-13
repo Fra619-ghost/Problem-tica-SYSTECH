@@ -25,7 +25,7 @@ import java.util.Objects;
  * </ul>
  *
  * <h2>Creación</h2>
- * Usa la fábrica {@link #of(LocalDate, Equipo, Equipo, Juego, Arbitro)} para validar precondiciones.
+ * .
  */
 public class Partida {
 
@@ -42,15 +42,22 @@ public class Partida {
     /** Árbitro que supervisa la partida (opcional). */
     private Arbitro arbitro;
 
+    private Torneo torneo;
 
 
-    public Partida(LocalDate fecha, Equipo equipo1, Equipo equipo2, Juego juego, Arbitro arbitro) {
+
+
+
+    private Partida(Torneo torneo, LocalDate fecha, Equipo e1, Equipo e2, Arbitro arbitro) {
+        this.torneo = torneo;
         this.fecha = fecha;
-        this.equipo1 = equipo1;
-        this.equipo2 = equipo2;
-        this.juego = juego;
+        this.equipo1 = e1;
+        this.equipo2 = e2;
+        this.juego = torneo.getJuego();
         this.arbitro = arbitro;
+        this.arbitro.asignarPartida(this); // registra en historial del árbitro
     }
+
 
     /**
      * Fábrica segura para crear partidas.
@@ -60,25 +67,26 @@ public class Partida {
      * @param fecha   fecha de la partida
      * @param e1      primer equipo
      * @param e2      segundo equipo (distinto a e1)
-     * @param juego   juego de la partida (el del torneo)
+     * @param torneo   juego de la partida (el del torneo)
      * @param arbitro árbitro asignado (puede ser null)
      * @return instancia inmutable de Partida
      * @throws NullPointerException     si fecha, e1, e2 o juego son nulos
      * @throws IllegalArgumentException si e1 y e2 son el mismo equipo
      */
-    public static Partida of(LocalDate fecha, Equipo e1, Equipo e2, Juego juego, Arbitro arbitro) {
+    public static Partida of(Torneo torneo, LocalDate fecha, Equipo e1, Equipo e2, Arbitro arbitro) {
+        Objects.requireNonNull(torneo, "torneo");
         Objects.requireNonNull(fecha, "fecha");
         Objects.requireNonNull(e1, "equipo1");
         Objects.requireNonNull(e2, "equipo2");
-        Objects.requireNonNull(juego, "juego");
-        if (e1.equals(e2)) {
-            throw new IllegalArgumentException("Una partida requiere dos equipos distintos");
-        }
-        return new Partida(fecha, e1, e2, juego, arbitro);
+        Objects.requireNonNull(arbitro, "arbitro");
+        if (e1.equals(e2)) throw new IllegalArgumentException("Una partida requiere dos equipos distintos");
+        return new Partida(torneo, fecha, e1, e2, arbitro);
     }
 
     /** @return fecha programada. */
     public LocalDate getFecha() { return fecha; }
+
+    public Torneo getTorneo() { return torneo; }
 
     /** @return equipo 1 (no nulo). */
     public Equipo getEquipo1() { return equipo1; }
@@ -104,7 +112,7 @@ public class Partida {
      *
      * @param arbitro nuevo árbitro (puede ser null para “desasignar” temporalmente)
      */
-    public void asignarArbitro(Arbitro arbitro) { // <-- corrige el typo
+    public void asignarArbitro(Arbitro arbitro) {
         this.arbitro = arbitro;
         if (arbitro != null) {
             arbitro.asignarPartida(this);
@@ -114,11 +122,13 @@ public class Partida {
     @Override
     public String toString() {
         return "Partida{" +
-                "fecha=" + fecha +
-                ", e1=" + (equipo1 != null ? equipo1.getNombre() : "null") +
-                ", e2=" + (equipo2 != null ? equipo2.getNombre() : "null") +
-                ", juego=" + (juego != null ? juego.getNombre() : "null") +
-                ", arbitro=" + (arbitro != null ? (arbitro.getNombre() + " " + arbitro.getApellido()) : "—") +
+                "torneo=" + torneo.getNombre() +
+                ", fecha=" + fecha +
+                ", e1=" + equipo1.getNombre() +
+                ", e2=" + equipo2.getNombre() +
+                ", juego=" + juego.getNombre() +
+                ", arbitro=" + arbitro.getNombre() + " " + arbitro.getApellido() +
                 '}';
     }
+
 }
